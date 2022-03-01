@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>eCommerce</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container" id="container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+        <a class="navbar-brand text-light" href="/">
+            <img src="/img/home.png" width="40px" alt="Logo picture">
+        </a>
+        <div class="dropdown">
+            <button class="dropbtn">Order by</button>
+            <div class="dropdown-content">
+                <a th:href="@{'/products/allProducts/{id}/{pageNo}'(id = 1, pageNo = ${pageNo})}">Name a...z</a>
+                <a th:href="@{'/products/allProducts/{id}/{pageNo}'(id = 2, pageNo = ${pageNo})}">Name z...a</a>
+                <a th:href="@{'/products/allProducts/{id}/{pageNo}'(id = 3, pageNo = ${pageNo})}">Category a...z</a>
+                <a th:href="@{'/products/allProducts/{id}/{pageNo}'(id = 4, pageNo = ${pageNo})}">Category z...a</a>
+                <a th:href="@{'/products/allProducts/{id}/{pageNo}'(id = 5, pageNo = ${pageNo})}">Date 1...9</a>
+                <a th:href="@{'/products/allProducts/{id}/{pageNo}'(id = 6, pageNo = ${pageNo})}">Date 9...1</a>
+            </div>
+        </div>
+        <ul class="navbar-nav ml-auto ">
+            <li class="nav-item">
+                <a class="nav-link"  href="/categories/getAllCategory">All Category</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products/add">Add Product</a>
+            </li>
+        </ul>
+    </nav>
+
+    <h1 class="text-center" th:text="|Products: ${allProducts.totalRecords}|"></h1>
+
+    <section id="movie">
+        <div  class=" mt-3 ">
+            <div class="row d-flex d-wrap">
+                <div th:each="p : ${allProducts.products}" th:object="${p}" class="card-deck d-flex justify-content-center">
+                    <div class="card mb-4" >
+                        <div class="card-body">
+                            <h4 class="card-title" th:text="${p.name}"></h4>
+                        </div>
+                        <div class="card">
+                            <p th:text="|Category: ${p.category}|"></p>
+                        </div>
+                        <div class="card">
+                            <p th:text="|Quantity: ${p.quantity}|"></p>
+                        </div>
+                        <div class="card">
+                            <p th:text="|Created date: ${p.createdDate}|"></p>
+                        </div>
+                        <div class="card">
+                            <p th:text="|Last modifie ddate: ${p.lastModifiedDate}|"></p>
+                        </div>
+                        <div class="card" id="details">
+                            <p th:text="|Description: ${p.description}|"></p>
+                        </div>
+                        <div class="card-footer">
+                            <form th:object="${productBuyBindingModel}" th:action="@{'/products/buy/{id}'(id = ${p.id})}" th:method="POST" >
+                                <div th:if="${p.quantity} > 0" id="quantity-form">
+                                    <div class="col">
+                                        <input th:field="*{quantityBuy}" th:errorclass="is-invalid" name="quantity" id="quantity" type="number" class="form-control" placeholder="Select Quantity"></input>
+                                        <small th:if="${#fields.hasErrors('quantityBuy')} and ${productName} == ${p.name}" th:errors="*{quantityBuy}"  id="quantityError" class="form-text bg-danger rounded"></small>
+                                        <h7 th:if="${quantityIsNotEnough} and ${productName} == ${p.name}" th:text="|Insufficient quantity. Available quantity:${p.quantity}|" class="form-text bg-danger rounded"></h7>
+                                        <h7 th:if="${quantityIsNull} and ${productName} == ${p.name}"  class="form-text bg-danger rounded">Quantity buy cannot be null!!!</h7>
+                                        <h7 th:if="${quantityIsNegative} and ${productName} == ${p.name}"  class="form-text bg-danger rounded">Тhe quantity buy cannot be a negative value or zero!!!</h7>
+                                    </div>
+                                </div>
+                                <a th:href="@{'/products/updateProduct/{id}'(id = ${p.id})}">
+                                    <button  type="button" class="btn btn-info">Update</button>
+                                </a>
+                                <a th:href="@{'/products/delete/{id}'(id = ${p.id})}">
+                                    <button  type="button" class="btn btn-info">Delete</button>
+                                </a>
+                                <a th:if="${p.quantity} > 0">
+                                    <button type="submit" class="btn btn-info">Buy</button>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<div class="container">
+        <ul class="pagination">
+            <li ><a th:if="${pageNo} > 0" th:href="@{'/products/allProducts/{id}/{pageNo}'(id = ${sortIndex}, pageNo = ${pageNo} - 1)}">Previous</a></li>
+            <h3 th:text="${pageNo} + 1">1</h3>
+            <!-- <li><a href="#">2</a></li>
+             <li><a href="#">3</a></li>
+             <li><a href="#">4</a></li>
+             <li><a href="#">5</a></li>
+             <li><a href="#">6</a></li>
+             <li><a href="#">7</a></li>
+             <li><a href="#">8</a></li> -->
+            <li ><a th:if="${pageNo} < ${pageCount} - 1" th:href="@{'/products/allProducts/{id}/{pageNo}'(id = ${sortIndex}, pageNo = ${pageNo} + 1)}">Next</a></li>
+        </ul>
+</div>
+
+    <footer class="page-footer font-small">
+        <div class="footer-copyright text-center py-3">© 2022
+            <a href="#" class="text-dark">
+                Applications</a>
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>

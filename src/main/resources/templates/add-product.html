@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>eCommerce</title>
+    <link rel="icon" type="image/png" href="../static/favicon.ico">
+    <link href="../static/css/site.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container" id="container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+        <a class="navbar-brand text-light" href="/">
+            <img src="/img/home.png" width="40px" alt="Logo picture">
+        </a>
+        <ul class="navbar-nav ml-auto ">
+            <li class="nav-item">
+                <a class="nav-link"  href="/categories/getAllCategory">All Category</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  th:href="@{'/products/allProducts/{id}/{pageNo}'(id = 1, pageNo = 0)}">All Product</a>
+            </li>
+        </ul>
+    </nav>
+
+    <section id="add-product">
+        <form class="text-center border border-light p-5" th:object="${productAddBindingModel}" action="/products/add" method="POST">
+            <h4 th:if="${successfulProductAdded}" th:text="|Successful Added Product: ${productAddBindingModel.name}|" class="badge-warning rounded"></h4>
+            <h1>Add product</h1>
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input th:field="*{name}" th:errorclass="is-invalid" id="name" type="text" class="form-control" placeholder="Name" name="name" value="">
+                <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" id="nameError" class="bg-danger rounded"></small>
+                <small th:if="${productIsExists}" class="bg-danger rounded">This product is already exists!!!</small>
+            </div>
+            <div class="form-group">
+                <label for="category">Product Category</label>
+                <input th:field="*{category}" th:errorclass="is-invalid" id="category" type="text" class="form-control" placeholder="Category" name="category" value="">
+                <small th:if="${#fields.hasErrors('category')}" th:errors="*{category}" id="categoryError" class="bg-danger rounded"></small>
+            </div>
+            <div class="form-group">
+                <label for="description">Product Description</label>
+                <textarea th:field="*{description}" th:errorclass="is-invalid" id="description" class="form-control" placeholder="Description" name="description"></textarea>
+                <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" id="descriptionError" class="bg-danger rounded"></small>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Product Quantity</label>
+                <input th:field="*{quantity}" th:errorclass="is-invalid" id="quantity" type="number" class="form-control" placeholder="Quantity" name="quantity" value="">
+                <small th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" id="quantityError" class="bg-danger rounded"></small>
+            </div>
+            <div class="form-group">
+                <label for="createdDate">Created date</label>
+                <input th:field="*{createdDate}" th:errorclass="is-invalid" id="createdDate" type="date" class="form-control" placeholder="Created date"  name="createdDate" value="">
+                <small th:if="${#fields.hasErrors('createdDate')}" th:errors="*{createdDate}" id="createdDateError" class="bg-danger rounded"></small>
+            </div>
+            <div class="form-group">
+                <label for="lastModifiedDate">Last modified date</label>
+                <input th:field="*{lastModifiedDate}" th:errorclass="is-invalid" id="lastModifiedDate" type="date" class="form-control" placeholder="Last modified date" name="lastModifiedDate" value="">
+                <small th:if="${#fields.hasErrors('lastModifiedDate')}" th:errors="*{lastModifiedDate}" id="lastModifiedDateError" class="bg-danger rounded"></small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </section>
+
+    <footer class="page-footer font-small">
+        <div class="footer-copyright text-center py-3">© 2022
+            <a href="#" class="text-dark">
+                Applications</a>
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
