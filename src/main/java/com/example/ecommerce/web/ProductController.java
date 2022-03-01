@@ -86,24 +86,38 @@ public class ProductController {
 //    }
 
 
-//    @GetMapping("/allProducts/{id}")
+//    @GetMapping("/allProducts/{id}/{pageNo}")
 //    @ResponseBody
-//    public ResponseEntity<?>  allProductsOrderByQuantities(@PathVariable int id){
-//        ProductRestViewModel products = null;
-//        if(id == 1){
-//            products = new ProductRestViewModel(this.productService.findAllOrderByName(), this.productService.findAllOrderByName().size());
-//        }else if(id == 2){
-//            products = new ProductRestViewModel(this.productService.findAllOrderByNameDesc(), this.productService.findAllOrderByName().size());
-//        }else if(id == 3){
-//            products = new ProductRestViewModel(this.productService.findAllOrderByCategory(), this.productService.findAllOrderByName().size());
-//        }else if(id == 4){
-//            products = new ProductRestViewModel(this.productService.findAllOrderByCategoryDesc(), this.productService.findAllOrderByName().size());
-//        }else if(id == 5){
-//            products = new ProductRestViewModel(this.productService.findAllOrderByCreateDate(), this.productService.findAllOrderByName().size());
-//        }else if(id == 6){
-//            products = new ProductRestViewModel(this.productService.findAllOrderByCreateDateDesc(), this.productService.findAllOrderByName().size());
+//    public ResponseEntity<?>  allProductsOrderByQuantities(@PathVariable("id") Long id, @PathVariable("pageNo") Integer pageNo, Model model){
+//        List<ProductViewModel> products = new ArrayList<>();
+//        if(id > 6){
+//            id = Long.valueOf(6);
 //        }
-//        return new ResponseEntity<>(products, HttpStatus.OK) ;
+//        Sort sortBy = null;
+//        if(id == 1){
+//            sortBy = Sort.by("name");
+//        }else if(id == 2){
+//            sortBy = Sort.by("name").descending();
+//        }else if(id == 3){
+//            sortBy = Sort.by("category");
+//        }else if(id == 4){
+//            sortBy = Sort.by("category").descending();
+//        }else if(id == 5){
+//            sortBy = Sort.by("createdDate");
+//        }else if(id == 6){
+//            sortBy = Sort.by("createdDate").descending();
+//        }
+//        double pageCount = Math.ceil((double) this.productService.getAllProductCount() / 3);
+//        if(pageNo > pageCount){
+//            pageNo = (int)pageCount -1;
+//        }
+//        products = this.productService.getAllProducts(pageNo, 3, sortBy);
+//        ProductRestViewModel productsVew = new ProductRestViewModel(products, this.productService.getAllProductCount());
+//        model.addAttribute("allProducts", productsVew);
+//        model.addAttribute("sortIndex", id);
+//        model.addAttribute("pageCount", pageCount);
+//        model.addAttribute("pageNo", pageNo);
+//        return new ResponseEntity<>(productsVew, HttpStatus.OK) ;
 //    }
 
     @GetMapping("/allProducts/{id}/{pageNo}")
